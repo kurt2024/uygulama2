@@ -17,7 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
       - name: Bagimliliklari Yukle ve Capacitor Android Ekle
         run: |
@@ -42,7 +41,7 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/build.gradle', 'android/app/build.gradle') }}
           restore-keys: |
-            ${- runner.os }}-gradle-
+            ${{ runner.os }}-gradle-
 
       - name: Android APK Derle (Release)
         working-directory: ./android
