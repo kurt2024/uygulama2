@@ -1,0 +1,16 @@
+{
+  "name": "ekg-atlas",
+  "version": "1.0.0",
+  "description": "12 derivasyonlu EKG simülatörü",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Static app ready'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.5.1",
+    "@capacitor/core": "^5.5.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.5.1"
+  }
+}
