@@ -1,0 +1,57 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodlari Depodan Al
+        uses: actions/checkout@v4
+
+      - name: Node.js Kurulumu
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Bagimliliklari Yukle ve Capacitor Android Ekle
+        run: |
+          npm install
+          npx cap init "EKG Atlas" "com.ekgatlas.app" --web-dir www --yes || true
+          npx cap add android
+
+      - name: Web Varliklarini Senkronize Et
+        run: npx cap sync android
+
+      - name: JDK 17 Kurulumu (Gradle 8+ Uyumlulugu İçin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle Onbellek Yapilandirmasi
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/build.gradle', 'android/app/build.gradle') }}
+          restore-keys: |
+            ${- runner.os }}-gradle-
+
+      - name: Android APK Derle (Release)
+        working-directory: ./android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: APK Dosyasini Kaydet
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-signed
+          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
