@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Debug APK
 
 on:
   push:
@@ -43,14 +43,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Android APK Derle (Release)
+      - name: Android Debug APK Derle
         working-directory: ./android
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew assembleDebug --no-daemon
 
-      - name: APK Dosyasini Kaydet
+      - name: Debug APK Dosyasini Kaydet
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-signed
-          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
